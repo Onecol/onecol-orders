@@ -11,10 +11,6 @@ services:
       - key: ADMIN_CHAT_ID
         sync: false
       - key: ORDERS_DB_PATH
-        value: /var/data/orders.db
+        value: /tmp/orders.db
       - key: PORT
         value: 10000
-    disk:
-      name: orders-database
-      mountPath: /var/data
-      sizeGB: 1
