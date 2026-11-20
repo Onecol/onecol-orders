@@ -214,29 +214,23 @@
             if (event.key === "Escape") closeOrderModal();
         });
 
-        orderForm.addEventListener("submit", async (event) => {
+        orderForm.addEventListener("submit", (event) => {
             event.preventDefault();
-            const submitButton = orderForm.querySelector("button[type='submit']");
-            submitButton.disabled = true;
-            orderStatus.textContent = "Отправляем...";
             const payload = Object.fromEntries(new FormData(orderForm));
-
-            try {
-                const response = await fetch("/api/orders", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-                if (!response.ok) throw new Error(result.error || "Не удалось отправить заявку.");
-
-                orderStatus.textContent = `Заявка #${result.order_id} отправлена. Я скоро свяжусь с вами.`;
-                orderForm.reset();
-            } catch (error) {
-                orderStatus.textContent = error.message;
-            } finally {
-                submitButton.disabled = false;
-            }
+            const message = [
+                "Новая заявка с сайта:",
+                `Имя: ${payload.name}`,
+                `Контакт: ${payload.contact}`,
+                `Задача: ${payload.description}`
+            ].join("\n");
+            navigator.clipboard?.writeText(message).catch(() => {});
+            orderStatus.textContent = "Текст заявки скопирован. Открываем Telegram...";
+            window.open(
+                `https://t.me/Onecolzakaz_bot?start=${encodeURIComponent("заказ")}`,
+                "_blank",
+                "noopener,noreferrer"
+            );
+            orderStatus.textContent = "Напишите боту текст заявки из формы.";
         });
     </script>
 </body>
