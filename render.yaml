@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: onecol-orders
+    runtime: python
+    buildCommand: python -m pip install -r requirements.txt
+    startCommand: python bot.py
+    healthCheckPath: /
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: ADMIN_CHAT_ID
+        sync: false
+      - key: ORDERS_DB_PATH
+        value: /var/data/orders.db
+      - key: PORT
+        value: 10000
+    disk:
+      name: orders-database
+      mountPath: /var/data
+      sizeGB: 1
